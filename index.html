@@ -1,0 +1,182 @@
+<!doctype html>
+<html lang="en"> 
+ <head> 
+  <meta charset="UTF-8"> 
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
+  <title>ID Activation</title> 
+  <link rel="stylesheet" href="style.css"> 
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js"></script> 
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js"></script> 
+ </head> 
+ <body> 
+  <div class="popup"> 
+   <h2>ID Activation</h2> 
+   <p>আপনার একাউন্ট অ্যাক্টিভ করতে <b>১০০ টাকা</b> পাঠান এবং নিচে তথ্য পূরণ করুন।</p> 
+   <div class="payment-options"> <button onclick="showNumber('nagad')">নগদ</button> <button onclick="showNumber('bkash')">বিকাশ</button> 
+   </div> 
+   <p id="payment-number" onclick="copyNumber()" style="display: none;"></p> 
+   <input type="text" id="user-number" placeholder="আপনার মোবাইল নাম্বার"> 
+   <input type="text" id="transaction-id" placeholder="ট্রানজেকশন আইডি"> <button id="submit-btn" onclick="submitForm()">Submit</button> 
+   <div id="loading" class="loading-spinner" style="display: none;"></div> 
+  </div> 
+  <script>
+        // 🔹 Firebase Config (তোমার Firebase Console থেকে নিয়ে আসতে হবে)
+        const firebaseConfig = {
+            apiKey: "তোমার_API_KEY",
+            authDomain: "তোমার_PROJECT_ID.firebaseapp.com",
+            projectId: "তোমার_PROJECT_ID",
+            storageBucket: "তোমার_PROJECT_ID.appspot.com",
+            messagingSenderId: "তোমার_SENDER_ID",
+            appId: "তোমার_APP_ID"
+        };
+
+        // 🔹 Firebase Initializations
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+
+        // 🔹 নগদ ও বিকাশ নাম্বার গ্লোবালি সেট করা
+        let nagadNumber = "01796549955"; 
+        let bkashNumber = "018XXXXXXXX"; 
+
+        function showNumber(method) {
+            let paymentNumber = document.getElementById("payment-number");
+
+            if (method === "nagad") {
+                paymentNumber.innerText = "নগদ নাম্বার: " + nagadNumber;
+            } else if (method === "bkash") {
+                paymentNumber.innerText = "বিকাশ নাম্বার: " + bkashNumber;
+            }
+
+            // 🔹 নাম্বারটি দেখানোর জন্য display সেট করা
+            paymentNumber.style.display = "block";
+        }
+
+        function copyNumber() {
+            let paymentNumber = document.getElementById("payment-number");
+            if (paymentNumber.innerText) {
+                let number = paymentNumber.innerText.split(": ")[1]; // 🔹 নম্বর আলাদা করা
+                navigator.clipboard.writeText(number);
+                alert("নাম্বার কপি হয়েছে: " + number);
+            } else {
+                alert("প্রথমে নগদ বা বিকাশ নির্বাচন করুন!");
+            }
+        }
+
+        function submitForm() {
+            let userNumber = document.getElementById("user-number").value;
+            let transactionId = document.getElementById("transaction-id").value;
+
+            if (userNumber === "" || transactionId === "") {
+                alert("অনুগ্রহ করে সব তথ্য পূরণ করুন!");
+                return;
+            }
+
+            document.getElementById("submit-btn").style.display = "none";
+            document.getElementById("loading").style.display = "block";
+
+            // 🔹 ডাটাবেজে তথ্য সংরক্ষণ করা
+            db.collection("transactions").add({
+                userNumber: userNumber,
+                transactionId: transactionId,
+                timestamp: firebase.firestore.FieldValue.serverTimestamp()
+            })
+            .then(() => {
+                alert("ID Activation Request Sent!");
+                window.location.href = "dashboard.html"; 
+            })
+            .catch(error => {
+                alert("Error: " + error.message);
+                document.getElementById("submit-btn").style.display = "block";
+                document.getElementById("loading").style.display = "none";
+            });
+        }
+    </script> 
+  <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background: red;
+        }
+
+        .popup {
+            width: 90%;
+            max-width: 400px;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            text-align: center;
+        }
+
+        h2 {
+            color: red;
+        }
+
+        p {
+            margin: 10px 0;
+        }
+
+        .payment-options {
+            display: flex;
+            justify-content: space-between;
+            margin: 10px 0;
+        }
+
+        button {
+            width: 48%;
+            padding: 10px;
+            background: red;
+            border: none;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        button:hover {
+            background: darkred;
+        }
+
+        input {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            outline: none;
+            text-align: center;
+        }
+
+        #payment-number {
+            font-weight: bold;
+            cursor: pointer;
+            color: red;
+            margin: 10px 0;
+        }
+
+        .loading-spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid #ccc;
+            border-top: 4px solid red;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style> 
+ </body>
+</html>
