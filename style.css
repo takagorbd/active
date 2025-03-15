@@ -77,13 +77,6 @@ input {
     font-size: 16px;
 }
 
-#payment-number {
-    font-weight: bold;
-    cursor: pointer;
-    color: #d32f2f;
-    margin: 10px 0;
-}
-
 .loading-spinner {
     width: 40px;
     height: 40px;
@@ -99,3 +92,20 @@ input {
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
   }
+
+#payment-number {
+    display: none; /* প্রথমে লুকানো থাকবে */
+    font-size: 18px;
+    font-weight: bold;
+    color: red;
+    margin-top: 10px;
+    cursor: pointer;
+}
+
+#success-message {
+    display: none;
+    font-size: 16px;
+    color: green;
+    font-weight: bold;
+    margin-top: 10px;
+        }
