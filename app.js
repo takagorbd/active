@@ -19,12 +19,18 @@ function showNumber(method) {
     let paymentNumber = document.getElementById("payment-number");
 
     if (method === "nagad") {
-        paymentNumber.innerText = "নগদ নাম্বার: " + nagadNumber;
+        paymentNumber.innerText = "📌 নগদ নাম্বার: " + nagadNumber;
     } else if (method === "bkash") {
-        paymentNumber.innerText = "বিকাশ নাম্বার: " + bkashNumber;
+        paymentNumber.innerText = "📌 বিকাশ নাম্বার: " + bkashNumber;
     }
 
+    // 🔹 নাম্বারটি দেখানোর জন্য CSS সেট করা
     paymentNumber.style.display = "block";
+    paymentNumber.style.fontWeight = "bold";
+    paymentNumber.style.color = "red";
+    paymentNumber.style.fontSize = "18px";
+    paymentNumber.style.marginTop = "10px";
+    paymentNumber.style.cursor = "pointer";
 }
 
 function copyNumber() {
@@ -32,38 +38,51 @@ function copyNumber() {
     if (paymentNumber.innerText) {
         let number = paymentNumber.innerText.split(": ")[1];
         navigator.clipboard.writeText(number);
-        alert("নাম্বার কপি হয়েছে: " + number);
+        alert("✅ নাম্বার কপি হয়েছে: " + number);
     } else {
-        alert("প্রথমে নগদ বা বিকাশ নির্বাচন করুন!");
+        alert("⚠️ প্রথমে নগদ বা বিকাশ নির্বাচন করুন!");
     }
 }
 
 function submitForm() {
     let userNumber = document.getElementById("user-number").value;
     let transactionId = document.getElementById("transaction-id").value;
+    let submitBtn = document.getElementById("submit-btn");
+    let loadingSpinner = document.getElementById("loading");
+    let successMessage = document.getElementById("success-message");
 
     if (userNumber === "" || transactionId === "") {
-        alert("অনুগ্রহ করে সব তথ্য পূরণ করুন!");
+        alert("⚠️ অনুগ্রহ করে সব তথ্য পূরণ করুন!");
         return;
     }
 
-    document.getElementById("submit-btn").style.display = "none";
-    document.getElementById("loading").style.display = "block";
+    // 🔹 সাবমিট বাটন লুকানো এবং লোডিং দেখানো
+    submitBtn.style.display = "none";
+    loadingSpinner.style.display = "block";
+    successMessage.style.display = "none"; 
 
     // 🔹 Firestore-এ তথ্য সংরক্ষণ
-    db.collection("transactions").doc(userNumber).set({
+    db.collection("transactions").add({
         userNumber: userNumber,
         transactionId: transactionId,
-        status: "pending", // Default Pending
+        status: "Pending", 
         timestamp: firebase.firestore.FieldValue.serverTimestamp()
     })
     .then(() => {
-        alert("আপনার রিকোয়েস্ট পাঠানো হয়েছে! এডমিন অনুমোদন দিলে আইডি অ্যাক্টিভ হবে।");
-        window.location.href = "dashboard.html"; 
+        // 🔹 সফল হলে লোডিং বন্ধ করে Success Message দেখানো
+        loadingSpinner.style.display = "none";
+        successMessage.style.display = "block";  
+        successMessage.innerText = "✅ আপনার রিকোয়েস্ট সফলভাবে পাঠানো হয়েছে!";  
+        
+        // ৩ সেকেন্ড পর ড্যাশবোর্ডে রিডাইরেক্ট করা হবে
+        setTimeout(() => {
+            window.location.href = "dashboard.html";  
+        }, 3000); 
     })
     .catch(error => {
-        alert("Error: " + error.message);
-        document.getElementById("submit-btn").style.display = "block";
-        document.getElementById("loading").style.display = "none";
+        // 🔹 কোনো সমস্যা হলে এরর দেখানো
+        loadingSpinner.style.display = "none";
+        submitBtn.style.display = "block";
+        alert("❌ Error: " + error.message);
     });
 }
